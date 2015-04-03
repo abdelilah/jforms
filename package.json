@@ -1,5 +1,5 @@
 {
-  "name": "jForms",
+  "name": "jforms",
   "version": "0.0.1",
   "description": "A package to create forms with validation and filtering.",
   "main": "index.js",
