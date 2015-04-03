@@ -1,0 +1,29 @@
+{
+  "name": "jForms",
+  "version": "0.0.1",
+  "description": "A package to create forms with validation and filtering.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abdelilah/jforms.git"
+  },
+  "keywords": [
+    "form",
+    "bootstrap",
+    "expressjs",
+    "nodejs"
+  ],
+  "author": "Abdelilah Sawab",
+  "license": "GPL",
+  "bugs": {
+    "url": "https://github.com/abdelilah/jforms/issues"
+  },
+  "homepage": "https://github.com/abdelilah/jforms",
+  "dependencies": {
+    "lodash": "^3.6.0",
+    "randomstring": "^1.0.3"
+  }
+}
