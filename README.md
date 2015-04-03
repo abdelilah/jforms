@@ -63,7 +63,7 @@ myForm.handle(data, function(errors, filteredValues){
 ## Displaying the form
 jForms has the **toString** method defined so you can just print out your form variable to display the form.
 
-```
+```javascript
 console.log(myForm);
 // or
 console.log(myForm.toString());
@@ -71,7 +71,7 @@ console.log(myForm.toString());
 
 
 ## Full example
-```
+```javascript
 var v = require('validator');
 var jForms = require('jforms');
 
