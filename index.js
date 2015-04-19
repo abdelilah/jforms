@@ -35,6 +35,7 @@ jForms.prototype.handle = function(data, callback){
 
   me.isSubmitted = true;
   me.values = data;
+  
 
 
   _.forEach(me.fields, function(field, fname){
@@ -56,7 +57,7 @@ jForms.prototype.handle = function(data, callback){
     if(field.required && field.required === true && (val == null || val == '')){ // Required state
       errors[fname] = message;
     }
-    if(field.validators && _.isArray(field.validators)){
+    if(field.validators && _.isArray(field.validators) && val != null && val.length > 0){
       _.forEach(field.validators, function(validator){
         if(!validator(val)){
           errors[fname] = message;
@@ -67,6 +68,8 @@ jForms.prototype.handle = function(data, callback){
 
     dataFiltered[fname] = val;
   });
+
+  me.valuesFiltered = dataFiltered;
 
   // Finished validation
   if(_.size(errors) < 1){
@@ -128,6 +131,8 @@ jForms.prototype.toString = function(){
   _.forEach(this.fields, function(field, fname){
     if(fname == "submit") return;
 
+    var fieldValue = field.value ? field.value : "";
+
     if(!field.name){
       field.name = fname;
     }
@@ -137,7 +142,7 @@ jForms.prototype.toString = function(){
     }
 
     if(me.values[field.name]){
-      field.value = me.values[field.name];
+      fieldValue = me.values[field.name];
     }
 
 
@@ -159,7 +164,7 @@ jForms.prototype.toString = function(){
       template += '<textarea name="'+field.name+'"';
         addAttribs(field);
       template += '>';
-      if(field.value && field.value != "") template += field.value;
+      if(fieldValue != "") template += fieldValue;
       template += '</textarea>';
     }
     // Select
@@ -169,7 +174,7 @@ jForms.prototype.toString = function(){
       template += '>';
         if(field.options){
           _.forEach(field.options, function(val, key){
-            template += '<option value="'+key+'"'+(field.value && field.value == key ? ' selected="selected"' : '')+'>'+val+'</option>';
+            template += '<option value="'+key+'"'+(fieldValue == key ? ' selected="selected"' : '')+'>'+val+'</option>';
           });
         }
       template += '</select>';
@@ -180,7 +185,7 @@ jForms.prototype.toString = function(){
           _.forEach(field.options, function(val, key){
             template += '<div class="radio">';
               template += '<label>';
-                template += '<input type="radio" name="'+field.name+'" value="'+key+'"'+(field.value && field.value == key ? ' checked' : '');
+                template += '<input type="radio" name="'+field.name+'" value="'+key+'"'+(fieldValue == key ? ' checked' : '');
                 addAttribs(field);
                 template += '>'+val;
               template += '</label>';
@@ -211,21 +216,21 @@ jForms.prototype.toString = function(){
     // Password
     else if(field.type && field.type == "password"){
       template += '<input type="password" name="'+field.name+'"';
-        if(field.value && field.value != "") template += ' value="'+field.value+'"';
+        if(fieldValue != "") template += ' value="'+fieldValue+'"';
         addAttribs(field);
       template += '>';
     }
     // Hidden
     else if(field.type && field.type == "hidden"){
       template += '<input type="hidden" name="'+field.name+'"';
-        if(field.value && field.value != "") template += ' value="'+field.value+'"';
+        if(fieldValue != "") template += ' value="'+fieldValue+'"';
         addAttribs(field);
       template += '>';
     }
     // Text input
     else{
       template += '<input type="text" name="'+field.name+'"';
-        if(field.value && field.value != "") template += ' value="'+field.value+'"';
+        if(fieldValue != "") template += ' value="'+fieldValue+'"';
         addAttribs(field);
       template += '>';
     }
