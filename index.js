@@ -2,7 +2,7 @@ var _ = require('lodash');
 var randomstring = require("randomstring");
 
 
-var jForms = function(formFields){
+function jForms(formFields){
   this.fields = formFields;
   this.enctype = '';
   this.method = 'post';
@@ -123,6 +123,11 @@ jForms.prototype.toString = function(){
     if(this.enctype != '') template += ' enctype="'+this.enctype+'"';
     if(this.className != '') template += ' class="'+this.className+'"';
     if(this.id != '') template += ' id="'+this.id+'"';
+    if(this.attribs != ''){
+      _.forEach(this.attribs, function(val, attr){
+        template += ' '+attr+'="'+val+'"';
+      });
+    }
   template += '>';
 
   
@@ -131,7 +136,7 @@ jForms.prototype.toString = function(){
   _.forEach(this.fields, function(field, fname){
     if(fname == "submit") return;
 
-    var fieldValue = me.isSubmitted === false && field.value ? field.value : "";
+    var fieldValue = field.value ? field.value : "";
 
     if(!field.name){
       field.name = fname;
@@ -141,10 +146,7 @@ jForms.prototype.toString = function(){
       field.id = 'form-'+field.name+'-'+randomstring.generate(8);
     }
 
-    if(me.isSubmitted === true && me.valuesFiltered[field.name]){
-      fieldValue = me.values[field.name];
-    }
-    else if(me.values[field.name]){
+    if(me.values[field.name]){
       fieldValue = me.values[field.name];
     }
 
