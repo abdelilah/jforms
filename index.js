@@ -4,6 +4,7 @@ var randomstring = require("randomstring");
 
 var jForms = function(formFields){
   this.fields = formFields;
+  this.attribs = {}
   this.enctype = '';
   this.method = 'post';
   this.action = '';
@@ -35,7 +36,7 @@ jForms.prototype.handle = function(data, callback){
 
   me.isSubmitted = true;
   me.values = data;
-  
+
 
 
   _.forEach(me.fields, function(field, fname){
@@ -44,12 +45,15 @@ jForms.prototype.handle = function(data, callback){
 
     var message = "This field is invalid";
     if(field.message) message = field.message;
-    var val = data[fname] ? data[fname] : null;
+    var val = data && data.hasOwnProperty(fname) ? data[fname] : null;
 
     // Perform filter
     if(field.filters && _.isArray(field.filters)){
       _.forEach(field.filters, function(filter){
-        val = filter(val);
+        try{
+          val = filter(val);
+        }
+        catch(e){}
       });
     }
 
@@ -64,7 +68,7 @@ jForms.prototype.handle = function(data, callback){
         }
       });
     }
-    
+
 
     dataFiltered[fname] = val;
   });
@@ -80,6 +84,16 @@ jForms.prototype.handle = function(data, callback){
     this.isValid = false;
     this.errors = errors;
   }
+
+  if(typeof callback == 'function'){
+
+  }
+  else{
+    return {
+      errors: errors,
+      values: dataFiltered
+    }
+  }
   callback(errors, dataFiltered);
 }
 
@@ -93,14 +107,14 @@ jForms.prototype.toString = function(){
   var addAttribs = function(field){
     // Anything else will be added as attributes to fields
     var ignoreAttribs = [
-      'label', 
-      'type', 
-      'value', 
-      'validators', 
-      'filters', 
-      'message', 
-      'className', 
-      'options', 
+      'label',
+      'type',
+      'value',
+      'validators',
+      'filters',
+      'message',
+      'className',
+      'options',
       'required',
       'icon',
       'name'
@@ -111,21 +125,24 @@ jForms.prototype.toString = function(){
       if(field.className) template += ' class="'+field.className+'"';
       else template += ' class="form-control"';
     }
-    
+
 
     _.forEach(field, function(val, attr){
       if(_.indexOf(ignoreAttribs, attr) > -1) return;
       template += ' '+attr+'="'+val+'"';
     });
   };
-  
+
   template += '<form action="'+this.action+'" method="'+this.method+'"';
     if(this.enctype != '') template += ' enctype="'+this.enctype+'"';
     if(this.className != '') template += ' class="'+this.className+'"';
     if(this.id != '') template += ' id="'+this.id+'"';
+    _.forEach(me.attribs, function(v, k){
+      template += ' '+k+'="'+v+'"';
+    });
   template += '>';
 
-  
+
 
   // Displaying fields
   _.forEach(this.fields, function(field, fname){
@@ -237,7 +254,7 @@ jForms.prototype.toString = function(){
         addAttribs(field);
       template += '>';
     }
-    
+
 
     if(me.errors[field.name]){
       template += '<p class="help-block">'+me.errors[field.name]+'</p>';
@@ -281,7 +298,7 @@ jForms.prototype.toString = function(){
 
   template += '</form>';
 
-  
+
   return template;
 }
 

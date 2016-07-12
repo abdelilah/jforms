@@ -1,10 +1,10 @@
 {
   "name": "jforms",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A package to create forms with validation and filtering.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -25,5 +25,9 @@
   "dependencies": {
     "lodash": "^3.6.0",
     "randomstring": "^1.0.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "validator": "^5.4.0"
   }
 }
