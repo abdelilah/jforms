@@ -2,7 +2,7 @@ var _ = require('lodash');
 var randomstring = require("randomstring");
 
 
-var jForms = function(formFields){
+function jForms(formFields){
   this.fields = formFields;
   this.attribs = {}
   this.enctype = '';
@@ -148,7 +148,7 @@ jForms.prototype.toString = function(){
   _.forEach(this.fields, function(field, fname){
     if(fname == "submit") return;
 
-    var fieldValue = me.isSubmitted === false && field.value ? field.value : "";
+    var fieldValue = field.value ? field.value : "";
 
     if(!field.name){
       field.name = fname;
@@ -158,10 +158,7 @@ jForms.prototype.toString = function(){
       field.id = 'form-'+field.name+'-'+randomstring.generate(8);
     }
 
-    if(me.isSubmitted === true && me.valuesFiltered[field.name]){
-      fieldValue = me.values[field.name];
-    }
-    else if(me.values[field.name]){
+    if(me.values[field.name]){
       fieldValue = me.values[field.name];
     }
 
